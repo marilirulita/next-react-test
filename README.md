@@ -6,7 +6,7 @@ This project is a financial app that create, update, delete and show customers a
 
 ### You can see the project here
 
-[live version](https://next-react-test-8osshv9kv-mar-y-sols-projects.vercel.app/)
+[live version](https://next-react-test-xi.vercel.app/)
 
 ### Course information
 
