@@ -1,3 +1,6 @@
+import { lusitana } from '@/app/ui/fonts';
+import Search from '@/app/ui/search';
+import { CreateCustomer } from '@/app/ui/customers/buttons';
 import Table from '@/app/ui/customers/table';
 import { fetchFilteredCustomers } from '@/app/lib/data';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
@@ -23,11 +26,16 @@ export default async function Page({
 
   return (
     <div className="w-full">
+      <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
+        Customers
+      </h1>
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <Search placeholder="Search customers..." />
+      <CreateCustomer />
+      </div>
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <Table customers={customers} />
       </Suspense>
-      <div className="mt-5 flex w-full justify-center">
-      </div>
     </div>
   );
 }
