@@ -135,36 +135,62 @@ export async function authenticate(
 }
 
 // customers code
+/* const CustomersFormSchema = z.object({
+  id: z.string(),
+  name: z.string({
+    invalid_type_error: 'Please enter your full name.',
+  }),
+  email: z.string({
+    invalid_type_error: 'Please enter a valid email.',
+  }),
+  image_url: z.string({
+    invalid_type_error: 'Please enter a valid url.',
+  }),
+});
+ */
 const CustomersFormSchema = z.object({
   id: z.string(),
-  customerId: z.string({
-    invalid_type_error: 'Please select a customer.',
-  }),
-  amount: z.coerce.number().gt(0, { message: 'Please enter an amount greater than $0.' }),
-  status: z.enum(['pending', 'paid'], {
-    invalid_type_error: 'Please select an invoice status.',
-  }),
-  date: z.string(),
+  name: z.string(),
+  email: z.string(),
+  image_url: z.string(),
 });
 
-const CreateCustomer = CustomersFormSchema.omit({ id: true, date: true });
-const UpdateCustomer = CustomersFormSchema.omit({ id: true, date: true });
+const CreateCustomer = CustomersFormSchema.omit({ id: true});
+const UpdateCustomer = CustomersFormSchema.omit({ id: true});
 
 export type CustomerState = {
   errors?: {
-    customerId?: string[];
-    amount?: string[];
-    status?: string[];
+    name?: string[];
+    email?: string[];
+    image_url?: string[];
   };
   message?: string | null;
 };
 
-export async function createCustomer(prevState: CustomerState, formData: FormData) {
+//reviewing code
+
+export async function createCustomer(formData: FormData) {
+  const { name, email, image_url } = CreateCustomer.parse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    image_url: formData.get('image_url'),
+  });
+
+  await sql`
+     INSERT INTO customers (name, email, image_url)
+     VALUES (${name}, ${email}, ${image_url})
+   `;
+
+   revalidatePath('/dashboard/customers');
+   redirect('/dashboard/customers');
+}
+
+/* export async function createCustomer(prevState: CustomerState, formData: FormData) {
   // Validate form fields using Zod
  const validatedFields = CreateCustomer.safeParse({
-   customerId: formData.get('customerId'),
-   amount: formData.get('amount'),
-   status: formData.get('status'),
+   name: formData.get('name'),
+   email: formData.get('email'),
+   image_url: formData.get('image_url'),
  });
 
  // If form validation fails, return errors early. Otherwise, continue.
@@ -176,25 +202,23 @@ export async function createCustomer(prevState: CustomerState, formData: FormDat
  }
 
  // Prepare data for insertion into the database
- const { customerId, amount, status } = validatedFields.data;
- const amountInCents = amount * 100;
- const date = new Date().toISOString().split('T')[0];
+ const { name, email, image_url } = validatedFields.data;
 
  // Insert data into the database
  try {
    await sql`
-     INSERT INTO invoices (customer_id, amount, status, date)
-     VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+     INSERT INTO customers (name, email, user_url)
+     VALUES (${name}, ${email}, ${image_url})
    `;
  } catch (error) {
    return {
-     message: 'Database Error: Failed to Create Invoice.',
+     message: 'Database Error: Failed to Create Customer.',
    };
  }
 
- revalidatePath('/dashboard/invoices');
- redirect('/dashboard/invoices');
-}
+ revalidatePath('/dashboard/customers');
+ redirect('/dashboard/customers');
+} */
 
 export async function updateCustomer(id: string, prevState: State, formData: FormData) {
  
@@ -241,3 +265,5 @@ export async function deleteCustomer(id: string) {
     };
   }
 }
+
+/* DELETE FROM customers WHERE id = 23b667ce-fa96-4afe-bac3-0db008fe0e46 */
