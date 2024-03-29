@@ -67,3 +67,7 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     totalPages,
   ];
 };
+
+export const imagesArray = () => {
+  return [{"path":"/customers/amy-burns.png"},{"path":"/customers/balazs-orban.png"},{"path":"/customers/delba-de-oliveira.png"},{"path":"/customers/emil-kowalski.png"},{"path":"/customers/evil-rabbit.png"},{"path":"/customers/guillermo-rauch.png"},{"path":"/customers/hector-simpson.png"},{"path":"/customers/jared-palmer.png"},{"path":"/customers/lee-robinson.png"},{"path":"/customers/michael-novotny.png"},{"path":"/customers/steph-dietz.png"},{"path":"/customers/steven-tey.png"}]
+}
