@@ -158,6 +158,7 @@ const CustomersFormSchema = z.object({
 const CreateCustomer = CustomersFormSchema.omit({ id: true});
 const UpdateCustomer = CustomersFormSchema.omit({ id: true});
 
+
 export type CustomerState = {
   errors?: {
     name?: string[];
@@ -220,6 +221,24 @@ export async function createCustomer(formData: FormData) {
  redirect('/dashboard/customers');
 } */
 
+
+export async function updateCustomer(id: string, formData: FormData) {
+  const { name, email, image_url } = UpdateCustomer.parse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    image_url: formData.get('image_url'),
+  });
+ 
+  await sql`
+    UPDATE customers
+    SET name = ${name}, email = ${email}, image_url = ${image_url}
+    WHERE id = ${id}
+  `;
+ 
+  revalidatePath('/dashboard/customers');
+  redirect('/dashboard/customers');
+}
+/* 
 export async function updateCustomer(id: string, prevState: State, formData: FormData) {
  
  const validatedFields = UpdateInvoice.safeParse({
@@ -253,7 +272,7 @@ export async function updateCustomer(id: string, prevState: State, formData: For
  revalidatePath('/dashboard/invoices');
  redirect('/dashboard/invoices');
 }
-
+ */
 export async function deleteCustomer(id: string) {
   try {
     await sql`DELETE FROM customers WHERE id = ${id}`;
